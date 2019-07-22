@@ -1,0 +1,9 @@
+extends layout
+
+block scripts
+  script(src="javascripts/socket.io.js")
+  script.
+    var socket = io();
+
+block content
+  p Welcome to Server

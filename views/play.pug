@@ -1,0 +1,46 @@
+extends layout
+
+block scripts
+  script(src="javascripts/socket.io.js")
+  script(src="https://code.jquery.com/jquery-3.4.1.min.js")
+  script.
+    var socket = io();
+
+    var words = "!{data_words}".split(",");
+    var wordCaret = 0;
+
+    function getScore(str1,str2){
+      let score = 0;
+      str1 = str1.split("");
+      str2 = str2.split("");
+      for(var i=0; i<str1.length;i++){
+        if(str1[i]==str2[i]){
+          score++;
+        }
+      }
+      return parseInt((score/str1.length)*100);
+    }
+
+    function setWord(){
+      wordCaret = wordCaret < words.length ? wordCaret + 1 : 0
+      $("#word").html(words[wordCaret]);
+    }
+
+    $("#send").on("click",function(e){
+      let score = getScore($("#word").val(),$("#answer").val());
+      socket.emit("send",{
+        data:score
+      });
+      $("#answer").val("");
+      setWord();
+    });
+
+    $(function(e){
+      setWord();
+    });
+
+block content
+  p Welcome to Play
+  p#word
+  input#answer(type="text")
+  button#send > 
