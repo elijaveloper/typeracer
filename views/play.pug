@@ -1,13 +1,21 @@
 extends layout
 
+block styles
+  link(rel="stylesheet", href="stylesheets/typeracer.css")
+
 block scripts
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css")
   script(src="javascripts/socket.io.js")
   script(src="https://code.jquery.com/jquery-3.4.1.min.js")
+  script(src="javascripts/typeracer.js")
+  script(src="https://unpkg.com/konva@3.4.1/konva.min.js")
+  //- TRY KONVA
   script.
     var socket = io();
 
-    var words = "!{data_words}".split(",");
+    var words = "!{data}".split(",");
     var wordCaret = 0;
+    var score = 0;
 
     function getScore(str1,str2){
       let score = 0;
@@ -27,10 +35,12 @@ block scripts
     }
 
     $("#send").on("click",function(e){
-      let score = getScore($("#word").val(),$("#answer").val());
-      socket.emit("send",{
-        data:score
-      });
+      score += getScore($("#word").html(),$("#answer").val());
+      // MULTIPLAYER
+      //- console.log(score);
+      //- socket.emit("send",{
+      //-   data:score
+      //- });
       $("#answer").val("");
       setWord();
     });
@@ -40,7 +50,8 @@ block scripts
     });
 
 block content
-  p Welcome to Play
-  p#word
-  input#answer(type="text")
-  button#send > 
+  #content
+    .controls
+      #word
+      input#answer(type="text",placeholder="Type here!")
+    canvas#backdrop(width=1280,height=800)

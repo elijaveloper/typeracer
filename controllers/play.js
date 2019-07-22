@@ -1,10 +1,10 @@
-var rword = require("rword").rword;
+var rword = require("random-words");
 
 class controller{
     static async page(req,res){
-        let test = rword.generate(100,{length:'3-5'});
+        let words = rword({exactly:100,maxLength:5});
         res.render("play",{
-            data_words: test
+            data: words
         });
     }
 
